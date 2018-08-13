@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>大屏部署界面</title>
+    <meta name="content-type" content="text/html; charset=UTF-8"></meta>
+</head>
+
+<body>
+<div id="uploadForm" class="top"><h1 class="titletext">大屏部署界面</h1></div>
+<div class="align-center">
+    <form enctype="multipart/form-data" method="post" action="uploadfile">
+        <input type="file" name="file" id="file"/>
+    </form>
+    <button id="upload">上传文件</button>
+</div>
+</body>
+<style>
+    body {
+        background: #E5E5E5;
+        background-image: url(0007019853844616_b.jpg);
+        background-size: cover;
+    }
+
+    .align-center {
+        margin: 200px auto;
+        width: 500px;
+        text-align: center;
+    }
+
+    .titletext {
+        background: #05187b;
+        color: aliceblue;
+    }
+</style>
+<script src="./js/jquery-3.3.1.min.js"></script>
+<script src="./js/ajaxfileupload.js"></script>
+<script>
+    $("#upload").on("click", function () {
+        $.ajaxFileUpload({
+            url: 'uploadDatavFile', //你处理上传文件的服务端
+            secureuri: false,//是否启用安全机制
+            fileElementId: 'file',//file的id
+            dataType: 'application/json',//返回的类型
+            success: function (data) {//调用成功时怎么处理
+                alert(data);
+            }
+        });
+    });
+</script>
+</html>

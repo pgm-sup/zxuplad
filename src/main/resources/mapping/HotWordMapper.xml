@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zx.mapper.HotWordMapper">
+    <resultMap id="HotWord" type="com.zx.model.HotWord">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="size" property="size" jdbcType="DOUBLE"/>
+    </resultMap>
+    <resultMap id="HotWordChild" type="com.zx.model.HotWordChild">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="hwid" property="hwid" jdbcType="INTEGER"/>
+        <result column="child" property="child" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="HotWordDetail" type="com.zx.model.HotWordDetail">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="hwid" property="hwid" jdbcType="INTEGER"/>
+        <result column="detail" property="detail" jdbcType="VARCHAR"/>
+        <result column="advice" property="advice" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="HotWord_List">
+    id, name, size
+  </sql>
+    <sql id="HotWordChild_List">
+    id, hwid, child
+  </sql>
+    <sql id="HotWordDetail_List">
+    id, hwid, detail, advice
+  </sql>
+    <select id="findHotWord" resultMap="HotWord" parameterType="java.lang.Integer">
+        select
+        <include refid="HotWord_List"/>
+        from T_HotWord
+    </select>
+    <select id="findChild" parameterType="int" resultMap="HotWordChild">
+        select
+        <include refid="HotWordChild_List"/>
+        from T_HotWord_Child
+        where hwid = #{hwid,jdbcType=DOUBLE}
+    </select>
+    <select id="findDeteil" parameterType="int" resultMap="HotWordDetail">
+        select
+        <include refid="HotWordDetail_List"/>
+        from T_HotWord_Detail
+        where hwid = #{hwid,jdbcType=DOUBLE}
+        and advice is null
+    </select>
+
+    <select id="findChildList" parameterType="java.lang.Integer" resultType="string">
+    select
+    child
+    from T_HotWord_Child
+     where hwid =  #{hwid,jdbcType=DOUBLE}
+  </select>
+    <select id="findDeteilList" parameterType="java.lang.Integer" resultType="string">
+    select
+    detail
+    from T_HotWord_Detail
+    where hwid =  #{hwid,jdbcType=DOUBLE}
+  </select>
+    <select id="findAdviceList" parameterType="java.lang.Integer" resultType="string">
+    select
+    advice
+    from T_HotWord_Detail
+    where hwid =  #{hwid,jdbcType=DOUBLE}
+  </select>
+
+    <insert id="insertHotWord" parameterType="com.zx.model.HotWord" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        insert into T_HotWord
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="size != null">
+                size,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="size != null">
+                #{size,jdbcType=DOUBLE},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zx.model.HotWord">
+        update T_HotWord
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="size != null">
+                size = #{size,jdbcType=DOUBLE},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <insert id="insertHotWordChild" parameterType="com.zx.model.HotWordChild" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        insert into T_HotWord_Child
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="hwid != null">
+                hwid,
+            </if>
+            <if test="child != null">
+                child,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="hwid != null">
+                #{hwid,jdbcType=VARCHAR},
+            </if>
+            <if test="child != null">
+                #{child,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="insertHotWordDetail" parameterType="com.zx.model.HotWordDetail" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        insert into T_HotWord_Detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="hwid != null">
+                hwid,
+            </if>
+            <if test="advice != null">
+                advice,
+            </if>
+            <if test="detail != null">
+                detail,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="hwid != null">
+                #{hwid,jdbcType=VARCHAR},
+            </if>
+            <if test="advice != null">
+                #{advice,jdbcType=VARCHAR},
+            </if>
+            <if test="detail != null">
+                #{detail,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="insertAdvice" parameterType="com.zx.model.HotWordDetail">
+        update T_HotWord_Detail
+        <set>
+            <if test="advice != null">
+                advice = #{advice,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where hwid = #{hwid,jdbcType=INTEGER}
+        and id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+    <update id="clearHotWord">
+      truncate table T_HotWord
+    </update>
+
+    <update id="clearHotWordChild">
+        truncate table T_HotWord_Child
+    </update>
+
+    <update id="clearHotWordDetail">
+        truncate table T_HotWord_Detail
+    </update>
+</mapper>
